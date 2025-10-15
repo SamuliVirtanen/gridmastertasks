@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Master Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Inter', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            color: #f0f0f0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 2rem;
+            line-height: 1.3;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .todo-container {
+            max-width: 900px;
+            width: 100%;
+            background: linear-gradient(145deg, #1e1e1e, #232323);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            user-select: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 12px;
+            border-bottom: 1px solid #333;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            transition: background 0.2s;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .todo-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .todo-item input[type="checkbox"] {
+            margin-right: 16px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+
+        .todo-item label {
+            flex-grow: 1;
+            display: block;
+            padding: 0;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #333;
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 18px;
+            margin-left: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .checked label {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .todo-container {
+                padding: 20px;
+            }
+
+            .todo-item {
+                font-size: 1rem;
+                padding: 14px 8px;
+            }
+
+            .todo-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                margin-right: 12px;
+            }
+
+            button {
+                padding: 8px 14px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Grid Master Guide</h1>
+    <div class="todo-container">
+        <div class="controls">
+            <button id="clearAll">Clear All</button>
+        </div>
+        <div id="todoList"></div>
+    </div>
+
+    <script>
+        const tasks = [
+            "Starting sequence: Power miner, Teleport ring, Unlock Gatherer",
+            "Complete tutorial",
+            "Choose Power miner",
+            "Count check to stronghold, equip dramen staff, shield",
+            "Stronghold all 4 floors to Fancy boots, claim Tuna Potato Ring (Teleport Ring?) (UNCONFIRMED but assumed task/reward)(If you're doing this after the initial release, pick up 2-3 world hops of Cooked meat in the house to the north before going into the stronghold).",
+            "Take vine upstairs",
+            "Mine 28 Tin ore for 15 mining",
+            "Run to Varrock",
+            "Deposit all, withdraw air runes, mind runes, Power miner axe",
+            "Buy Air staff, pink skirt at clothing shop, hammer, 2 mind pack, 50 chaos runes, 2 water packs",
+            "Run to Edgeville fairy ring, tele to AIS",
+            "Run southwest, take boat on river to Kastori",
+            "Run north, hop worlds to a world where Gemstone crab isn't at the Northern location (no Iron ore). Train mining until crab is about to die. Walk close to gemstone crab before it digs just in case.",
+            "Unlock gatherer relic. Use on Thieving, Agil, Fishing (if dodgy deals is a tile reward, Choose Thieving, Mining, Fishing)",
+            "Thieving, Golden god, Woodcutting sequence",
+            "Home teleport",
+            "Pickpocket men for 10 thieving",
+            "Pickpocket farmer to the north near Fred's house level 15",
+            "Pickpocket HAM members to level 40",
+            "Run to Varrock (don't die to dark wizards)",
+            "Pickpocket guards upstairs in Varrock castle to level 50 (level 42 mining/fishing)",
+            "Minigame tele Tzhaar fight pits",
+            "Mine 2x gold ore to the east",
+            "Claim lumberjack axe at bank",
+            "Use fight pit fairy ring, tele to DJP",
+            "Cut trees, oak trees, willow trees to 35 WC",
+            "Fairy ring to AJP. Run north to Civitas illa fortis",
+            "Steal valuables in Wealthy citizen house to unlock Golden God",
+            "Varlamore Blacksmith, buy and alch mith/addy platebodies (coins came from pickpocketing guards) until 200k cash. Buy 1 Mith platelegs (keep), 1 mith platebody (keep), spend rest of cash on addy platebodies and alch on the run to the stonemason (south of Varlamore, southeast coast)",
+            "Alch gold leaf at Stonemason for Production Prodigy relic",
+            "Alch Gold Leaves/Marble blocks at the stonemason until you're content with money (start on Marble blocks once you have >750K).",
+            "Mine Iron until you've banked a total of ~100 steel bars near stonemason while alching stacks",
+            "Run west to teak trees for 50 WC, change axe to Firemaking (mahog tree requirement for construction later). Continue returning to stonemason for more alchs until unlocking condensed gold stacks",
+            "Early combat task sequence",
+            "Fairy ring to DIS",
+            "Kill Lesser Demon if bottle neck isn't an issue",
+            "Go to draynor bank, Withdraw arrow shafts",
+            "Buy 10 wines from Fortunado",
+            "Talk to Diango to claim Banana hat",
+            "Go to Betty, as many chaos/death/elemental runes as you want (I'm buying 5k+ each)",
+            "Run to Port Sarim fishing shop, buy a few bait packs, 10k+ feathers",
+            "Make headless arrows while running",
+            "Buy 50+ buckets of sand/soda ash at charter for crafting start",
+            "Charter to Corsair cove",
+            "Deposit Sand/Soda ash",
+            "Kill Ogress warrior in safespot. I'm choosing Ranged/Strength/Prayer",
+            "Go upstairs, cut maple tree to the Northwest (requires dragon slayer autocompletion, talk to the NPC in red)",
+            "Crafting/Tele runes sequence",
+            "Minigame tele Soul wars",
+            "Take portal to Edgeville",
+            "Buy Rune platebody",
+            "Buy chisel from general store",
+            "Claim Harpoon in bank",
+            "Deposit all, withdraw 9 buckets of sand/soda ash. Make molten glass for 8+ crafting",
+            "Deposit all, withdraw coins, elemental runes, slash weapon",
+            "Lever to high wild, run to mage bank. Buy 1k+ Law runes, buy 50 cosmic runes",
+            "Varrock tele, run to Edge fairy ring. Tele CKQ",
+            "Bank all, withdraw coins, chisel",
+            "Train crafting at gem shop. Sapphires at 8, Emeralds at 15 (Emeralds are faster than rubies for crafting xp/hr because of purchase speed. I'll stop at 60 for now. Buy 1 ruby for str ammy.)",
+            "Prayer -> Ranged gear -> Bryophyta sequence",
+            "Buy studded body/legs from Horvik in Varrock (can get green dhide chaps/vambs if 32+ qp)",
+            "Deposit all, withdraw hammer, steel bars",
+            "Smith ~500 Steel knives with steel bars",
+            "Train pray at any altar to 60 ranged (~67 prayer + Combatant split)",
+            "Travel to gnome stronghold for Gnomeball task",
+            "Kill moss giants for mossy key (Wildy if you got a moss giant task, varrock sewers, karamja, kourend catacombs, or giants den if not)",
+            "Kill bryophyta (bring an axe) for +1 Combat mastery tile, unlock 7x exp",
+            "Fishing, Tempoross, Craftsman sequence",
+            "Home teleport lumbridge",
+            "Run south, fish shrimp to 5. Bait fish to 20",
+            "Run north to river, fish trout/salmon to 35",
+            "Go through Al Kharid gate. Run south, take boat to Tempoross",
+            "Complete 1 Tempoross (Bring Echo harpoon. 5 buckets of water, hammer, rope can be claimed on boat but it's better to buy from gate guard at Ruins of Unkah. Wasting time at lv 35 in a solo can cause you to fail). Use 17-19-19-full inv method if solo",
+            "Unlock Craftsman, I'm choosing Construction/Herblore/Runecraft",
+            "Strength/amulet, Gear sequence",
+            "Fairy ring to CKQ",
+            "Tele to Varrock",
+            "Buy rune legs from champs guild",
+            "Buy addy/mith full helm in Barbarian village",
+            "Tele to house",
+            "Buy Amulet mould from crafting shop (southern house)",
+            "Teleport to Ardy (minigame tele Fishing Trawler if tele isn't unlocked)",
+            "Buy ball of wool from General store",
+            "Withdraw gold bar",
+            "Make & enchant Ruby amulet",
+            "Minigame tele burthorpe, get dragon defender (8x drop rate)",
+            "Cooking, Corrupted Shark",
+            "Train cooking to 68 at Port Piscarillius food shop. Bring 10 logs, tinderbox, coins",
+            "Buy best 50 sardine, cod, tuna, lobster, 600+ swordfish, 1+ raw shark",
+            "Take Piscarillius mine cart (southwest) to Shayzien west",
+            "Run to clothing shop (east of south shayzien bank), buy chef's hat",
+            "Minigame tele to burthorpe",
+            "Cook food downstairs at fire for 68 cooking",
+            "Cook 1 shark",
+            "Claim Corrupted shark",
+            "Kill hobgoblins for 2 Limpwurt roots",
+            "Make 2 Super strength, 2 super attack pots (for Fight Caves later)",
+            "Construction sequence 1-99 (7x xp rate)",
+            "Woodcut 121 Mahog logs northwest of CIR fairy ring",
+            "Fairy ring AIS, make mahogany planks",
+            "Tele to camelot, buy 4 watering cans",
+            "Buy 4 bolts of cloth at sawmill",
+            "Tele to varrock, purchase Player owned House, pick up saw from spawn in house",
+            "1-37 Buy 127 Bagged plant 1 from Falador Garden supplier for 1-37 Con/Farming",
+            "Elemental balances to 47 (20k air, 20k earth, 20k fire, 20k water runes)",
+            "23 Gold sinks to 79 (requires 230 Condensed gold, 115 Gold leaf, 115 Mahog planks). Cost: 2.315B",
+            "Build 2x bedrooms, 2x mahog beds (6 mahog planks, 4 bolt of cloth), hire demon butler",
+            "250 Marble walls to 95 (2000 Marble blocks, use butler). Cost: 650m",
+            "41 Crystal thrones to 99 (615 magic stones, use butler). Cost: 600m",
+            "Finish at 99 construction, 92 herblore, 92 Runecraft",
+            "Build Demonic throne (25 magic stones) Cost: 25m",
+            "Claim Thunder khopesh",
+            "Buy 99 construction cape from Construction tutors",
+            "Mount in POH Cape Hanger (Achievement gallery) - 1x Marble block, 1x Gold leaf",
+            "Claim Spikey Aura",
+            "Hunter, Slayer Master sequence",
+            "Use 25k Exp lamp in Hunter (boosts to 55, skips early slow levels)",
+            "Catch grey chins in Kourend woodland until 63",
+            "Catch red chins in Feldip hills or Varlamore until 75",
+            "Catch a Moonlight moth to unlock either unlimited Super restore or unlimited brew, expected to be super restore (UNCONFIRMED TILE)",
+            "Fire cape sequence (see if we can get 3rd mastery by here)",
+            "Train more prayer for higher ranged/strength (80+?)",
+            "Complete fight caves with melee if 2nd mastery. Bring Corrupted shark, pray pots, Super str, super att pots",
+            "If not confident with melee fight caves, Buy 10k death runes, sell for tokkul, buy obby rings (rune arrow strength, 3t attack speed on rapid) or use your best knives",
+            "Bring Corrupted shark, pray pots, super str, super att pots, red chins",
+            "Complete 35 waves to unlock Slayer Master",
+            "If you skipped getting an MSB for fire cape, may be a good idea to get one now. Buy 10k death runes, sell for tokkul, buy obby rings (rune arrow strength, 3t attack speed on rapid) or use your best knives",
+            "Thieving training: Dodgy deals to 50, silver stall to 75, gem stall to 85, rogue outfit, elves to 99",
+            "3953 pickpockets to 99 at 7x = 11.58 enh teles at 8x drop rate",
+            "Dodgy multiplier + rogue outfit = 6x teles = 185.29 enh teles to 99 at 7x base rate",
+            "185.29 enh teles = 27,793 crystal shards",
+            "2500 smithing/crafting per 50 at normal rates",
+            "17.5k smithing/crafting at 7x. 555 repetitions to 99",
+            "99 crafting/smithing solved by ~25m thieving if rogue outfit + dodgy (check math)",
+            "99 craft/smith requires 249 Enh teles at 7x rate",
+            "16.4m Thieving solves 99 Thieving, Crafting, Smithing, 94 Fishing, 94 Mining",
+            "26m Thieving solves 99 fishing/mining (faster to thieve for mining/fishing xp than it is to mine or fish)",
+            "1x enh tele seed = 205 pickpockets at 1x drop rate",
+            "1x enh tele seed = 7,500 smithing/crafting xp at 1x exp rate"
+        ];
+
+        const todoList = document.getElementById('todoList');
+
+        function saveProgress() {
+            const states = [];
+            document.querySelectorAll('.todo-item input').forEach(cb => states.push(cb.checked));
+            localStorage.setItem('todoStates', JSON.stringify(states));
+        }
+
+        function loadProgress() {
+            const saved = JSON.parse(localStorage.getItem('todoStates') || '[]');
+            document.querySelectorAll('.todo-item input').forEach((cb, i) => {
+                if (saved[i]) {
+                    cb.checked = true;
+                    cb.parentElement.classList.add('checked');
+                }
+            });
+        }
+
+        tasks.forEach((task, index) => {
+            const item = document.createElement('div');
+            item.className = 'todo-item';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'task-' + index;
+
+            const label = document.createElement('label');
+            label.htmlFor = 'task-' + index;
+            label.textContent = task;
+
+            item.appendChild(checkbox);
+            item.appendChild(label);
+            todoList.appendChild(item);
+
+            // Make entire div clickable, excluding text selection
+            item.addEventListener('mousedown', (e) => {
+                if (e.target !== checkbox && e.target.tagName !== 'LABEL') {
+                    checkbox.checked = !checkbox.checked;
+                    item.classList.toggle('checked', checkbox.checked);
+                    saveProgress();
+                }
+            });
+
+            checkbox.addEventListener('change', () => {
+                item.classList.toggle('checked', checkbox.checked);
+                saveProgress();
+            });
+        });
+
+        document.getElementById('clearAll').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all completed tasks? This cannot be undone.')) {
+                document.querySelectorAll('.todo-item input').forEach(cb => cb.checked = false);
+                document.querySelectorAll('.todo-item').forEach(i => i.classList.remove('checked'));
+                saveProgress();
+            }
+        });
+
+        loadProgress();
+    </script>
+</body>
+
+</html>
